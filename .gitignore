@@ -1,0 +1,9 @@
+sesion_fotos/
+audios/
+paginas/
+imagenes/
+*.pdf
+tools/*.ttf
+__pycache__/
+verify-out/
+video_raw/
