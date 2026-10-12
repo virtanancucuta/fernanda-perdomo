@@ -83,7 +83,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--bg); color: var(--fg);
   font-family: var(--text); font-weight: 700; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase;
   line-height: 1; white-space: nowrap; position: relative; overflow: hidden; isolation: isolate;
-  transition: color .35s var(--ease), border-color .35s var(--ease), transform .3s var(--ease);
+  transition: color .35s var(--ease), border-color .35s var(--ease);
 }
 .btn::before {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
@@ -402,6 +402,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .session__track::-webkit-scrollbar { display: none; }
 .is-hscroll .session__track { overflow: visible; scroll-snap-type: none; width: max-content; }
+.is-hscroll .session__pin { height: 100vh; height: 100svh; min-height: 0; padding: 88px 0 32px; justify-content: flex-start; }
+.is-hscroll .session__rail { display: flex; align-items: center; width: max-content; height: 100%; }
+.is-hscroll .session__head { flex: none; width: min(42vw, 620px); margin: 0; padding-right: clamp(24px, 3vw, 56px); }
+.is-hscroll .session__title { font-size: clamp(56px, 6.2vw, 96px); }
+.is-hscroll .look__grid {
+  grid-template-rows: repeat(2, min(calc((100vh - 220px) / 2), 340px)); grid-auto-columns: min(calc((100vh - 220px) / 3), 227px);
+  grid-template-rows: repeat(2, min(calc((100svh - 220px) / 2), 340px)); grid-auto-columns: min(calc((100svh - 220px) / 3), 227px);
+}
 .look { flex: none; scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; }
 .look__label { display: flex; align-items: baseline; gap: 14px; }
 .look__label span { font-weight: 700; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; color: #666; }
@@ -450,33 +458,43 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .flyer:hover { transform: rotate(0) scale(1.04); }
 .flyer img { height: 100%; width: auto; }
 
-/* ---------- TARIFAS ---------- */
-.rates { overflow: hidden; }
-.rates__bg { position: absolute; inset: 0; z-index: 0; opacity: .14; }
-.rates__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) blur(2px); }
-.rates::before { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(var(--ink), transparent 30%, transparent 70%, var(--ink)); }
-.rates > *:not(.rates__bg) { position: relative; z-index: 1; }
-.rates__grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); align-items: stretch; }
-.rate {
-  position: relative; display: flex; flex-direction: column; gap: 10px;
-  padding: clamp(26px, 3vw, 44px); border-radius: var(--radius);
-  background: rgba(20, 20, 20, .82); border: 1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  transition: transform .5s var(--ease), border-color .4s;
-  transform-style: preserve-3d;
+/* eventos: videos (activaciones de marca + en toda Colombia) */
+.reels {
+  max-width: 1400px; margin: clamp(70px, 9vw, 140px) auto 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(36px, 6vw, 100px); align-items: start;
 }
-.rate:hover { border-color: rgba(230, 253, 1, .6); }
-.rate__zone { margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: .16em; font-size: 16px; color: var(--mute); }
-.rate__price { margin: 6px 0 0; font-family: var(--display); font-size: clamp(56px, 6vw, 96px); line-height: 1; display: flex; align-items: flex-start; gap: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.rate__price .cur { font-size: .45em; margin-top: .15em; color: var(--lime); }
-.rate__price small { font-family: var(--text); font-weight: 700; font-size: 16px; letter-spacing: .12em; align-self: flex-end; margin: 0 0 .7em 6px; color: var(--mute); }
-.rate__cities { margin: 0 0 18px; color: #cfcfcf; flex: 1; }
-.rate--hot { background: var(--lime); color: var(--ink); border-color: var(--lime); }
-.rate--hot .rate__zone, .rate--hot .rate__price small, .rate--hot .rate__cities { color: rgba(10, 10, 10, .72); }
-.rate--hot .rate__price .cur { color: var(--ink); }
-.rate__badge { position: absolute; top: -14px; right: 22px; background: var(--ink); color: var(--lime); border: 1.5px solid var(--lime); border-radius: 999px; padding: 6px 14px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; }
-.rates__note { max-width: 1400px; margin: 26px auto 0; color: var(--mute); font-size: 16px; }
-@media (max-width: 900px) {
-  .rates__grid { grid-template-columns: 1fr; }
+.reel { display: flex; flex-direction: column; gap: clamp(22px, 2.4vw, 34px); min-width: 0; }
+.reel--tour { margin-top: clamp(0px, 10vw, 160px); }
+.reel__media {
+  position: relative; width: min(100%, calc(78vh * 9 / 16), 460px); aspect-ratio: 9 / 16;
+  border-radius: var(--radius); overflow: hidden; background: #000;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, .55);
+}
+.reel__media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel__tag {
+  position: absolute; top: 16px; left: 16px; padding: 7px 14px; border-radius: 999px;
+  background: var(--lime); color: var(--ink); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 13px;
+}
+.reel__title { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(52px, 5.6vw, 92px); line-height: .92; text-wrap: balance; }
+.reel__title em { font-style: normal; color: var(--lime); }
+.reel__text { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.reel__text p { margin: 0; color: #cfcfcf; max-width: 46ch; }
+.reel__cities { margin: 0; }
+.reel__text .btn { margin-top: 6px; }
+@media (min-width: 1024px) {
+  .reels { grid-template-columns: minmax(0, 1fr); gap: clamp(70px, 8vw, 130px); }
+  .reel { --reel-w: min(calc(78vh * 9 / 16), 460px); display: grid; grid-template-columns: var(--reel-w) minmax(0, 1fr); align-items: center; gap: clamp(40px, 6vw, 110px); }
+  .reel--tour { grid-template-columns: minmax(0, 1fr) var(--reel-w); margin-top: 0; }
+  .reel .reel__media { width: 100%; }
+  .reel--tour .reel__media { order: 2; }
+  .reel--tour .reel__text { align-items: flex-end; text-align: right; }
+  .reel--tour .reel__cities { justify-content: flex-end; }
+  .reel__title { font-size: clamp(64px, 6.4vw, 96px); }
+}
+@media (max-width: 860px) {
+  .reels { grid-template-columns: minmax(0, 1fr); }
+  .reel--tour { margin-top: 0; }
+  .reel__media { width: min(100%, 420px); }
 }
 
 /* ---------- RIDER ---------- */

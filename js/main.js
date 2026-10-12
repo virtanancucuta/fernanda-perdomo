@@ -119,14 +119,17 @@
     document.addEventListener("mouseover", (e) => {
       cursor.classList.toggle("is-hover", !!e.target.closest("a, button, input, label, .ph"));
     });
+    // Con GSAP el imán se anima con GSAP (no con transición CSS: chocaría con las entradas gsap.from).
+    const pull = (el, x, y, d) => {
+      if (hasGSAP) gsap.to(el, { x, y, duration: d, ease: "power3.out", overwrite: "auto" });
+      else el.style.transform = x || y ? `translate(${x}px, ${y}px)` : "";
+    };
     $$(".magnetic").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left - r.width / 2) * 0.25;
-        const y = (e.clientY - r.top - r.height / 2) * 0.35;
-        el.style.transform = `translate(${x}px, ${y}px)`;
+        pull(el, (e.clientX - r.left - r.width / 2) * 0.25, (e.clientY - r.top - r.height / 2) * 0.35, 0.3);
       });
-      el.addEventListener("mouseleave", () => { el.style.transform = ""; });
+      el.addEventListener("mouseleave", () => pull(el, 0, 0, 0.5));
     });
   }
 
@@ -292,30 +295,38 @@
     requestAnimationFrame(draw);
   }
 
-  /* ---------------- Video en vivo ---------------- */
-  const liveVid = $("[data-live]");
-  const liveBtn = $("[data-live-sound]");
+  /* ---------------- Videos (en vivo + eventos) ---------------- */
+  // En silencio por defecto; se reproducen solo en pantalla; un solo video con sonido a la vez.
   const mainAudio = $("[data-audio]");
-  if (liveVid) {
-    const setSound = (on) => {
-      liveVid.muted = !on;
-      liveBtn.setAttribute("aria-pressed", String(on));
-      liveBtn.querySelector("span").textContent = on ? "Silenciar" : "Activar sonido";
-      if (on && mainAudio && !mainAudio.paused) mainAudio.pause();
-    };
-    liveBtn.addEventListener("click", () => {
-      setSound(liveVid.muted);
-      if (liveVid.paused) liveVid.play().catch(() => {});
-    });
-    if (mainAudio) mainAudio.addEventListener("play", () => { if (!liveVid.muted) setSound(false); });
-    const tryPlay = () => { const pr = liveVid.play(); if (pr && pr.catch) pr.catch(() => {}); };
+  const reels = $$("[data-reel]").map((vid) => ({ vid, btn: $("[data-reel-sound]", vid.parentElement) }));
+  const setSound = (r, on) => {
+    r.vid.muted = !on;
+    if (!r.btn) return;
+    r.btn.setAttribute("aria-pressed", String(on));
+    r.btn.querySelector("span").textContent = on ? "Silenciar" : "Activar sonido";
+  };
+  const muteOthers = (keep) => reels.forEach((r) => { if (r !== keep && !r.vid.muted) setSound(r, false); });
+  const tryPlay = (v) => { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); };
+  reels.forEach((r) => {
+    if (r.btn) {
+      r.btn.addEventListener("click", () => {
+        const on = r.vid.muted;
+        if (on) {
+          muteOthers(r);
+          if (mainAudio && !mainAudio.paused) mainAudio.pause();
+        }
+        setSound(r, on);
+        if (r.vid.paused) tryPlay(r.vid);
+      });
+    }
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) { if (liveVid.preload === "none") liveVid.preload = "auto"; if (!reduced) tryPlay(); }
-        else if (!liveVid.paused) liveVid.pause();
-      }, { threshold: 0.35 }).observe(liveVid);
+        if (e.isIntersecting) { if (r.vid.preload === "none") r.vid.preload = "auto"; if (!reduced) tryPlay(r.vid); }
+        else if (!r.vid.paused) r.vid.pause();
+      }, { threshold: 0.35 }).observe(r.vid);
     }
-  }
+  });
+  if (mainAudio) mainAudio.addEventListener("play", () => muteOthers(null));
 
   /* ---------------- Lightbox ---------------- */
   const lb = $(".lb");
@@ -476,16 +487,17 @@
     color: "#fff", stagger: 0.1, ease: "none",
     scrollTrigger: { trigger: ".scrub-text", start: "top 80%", end: "bottom 45%", scrub: true },
   });
-  gsap.from([".bio__claim", ".chips li"], { autoAlpha: 0, y: 24, stagger: 0.06, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: ".bio__claim", start: "top 90%" } });
+  gsap.from([".bio__claim", ".bio .chips li"], { autoAlpha: 0, y: 24, stagger: 0.06, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: ".bio__claim", start: "top 90%" } });
 
   // sesión: scroll horizontal fijado (solo pantallas medianas+)
   const mm = gsap.matchMedia();
   mm.add("(min-width: 761px)", () => {
     const section = $(".session");
     const track = $("[data-hscroll]");
+    const rail = $(".session__rail");
     section.classList.add("is-hscroll");
-    const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
-    const tween = gsap.to(track, {
+    const distance = () => Math.max(0, rail.scrollWidth - window.innerWidth);
+    const tween = gsap.to(rail, {
       x: () => -distance(), ease: "none",
       scrollTrigger: {
         trigger: ".session__pin", start: "top top", end: () => `+=${distance()}`,
@@ -507,32 +519,10 @@
   // eventos
   gsap.from(".venues li", { autoAlpha: 0, y: 50, stagger: 0.06, duration: 0.9, ease: "expo.out", scrollTrigger: { trigger: ".venues", start: "top 85%" } });
   gsap.from(".flyers", { autoAlpha: 0, y: 80, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".flyers", start: "top 90%" } });
-
-  // tarifas: entrada + contador + tilt
-  gsap.from(".rate", { autoAlpha: 0, y: 90, rotateX: -25, stagger: 0.12, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".rates__grid", start: "top 80%" } });
-  $$("[data-countup]").forEach((el) => {
-    const end = Number(el.dataset.countup);
-    const obj = { v: 0 };
-    ScrollTrigger.create({
-      trigger: el, start: "top 85%", once: true,
-      onEnter: () => gsap.to(obj, {
-        v: end, duration: 1.6, ease: "power3.out",
-        onUpdate: () => { el.textContent = Math.round(obj.v).toLocaleString("es-CO"); },
-      }),
-    });
+  $$(".reel").forEach((reel) => {
+    gsap.from($(".reel__media", reel), { autoAlpha: 0, y: 90, scale: 0.94, duration: 1.3, ease: "expo.out", scrollTrigger: { trigger: reel, start: "top 85%" } });
+    gsap.from($$(".reel__text > *", reel), { autoAlpha: 0, y: 30, stagger: 0.08, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: $(".reel__text", reel), start: "top 90%" } });
   });
-  if (finePointer) {
-    $$(".rate").forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const rx = ((e.clientY - r.top) / r.height - 0.5) * -10;
-        const ry = ((e.clientX - r.left) / r.width - 0.5) * 12;
-        gsap.to(card, { rotateX: rx, rotateY: ry, transformPerspective: 900, duration: 0.5, ease: "power2.out" });
-      });
-      card.addEventListener("mouseleave", () => gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.8, ease: "elastic.out(1, .5)" }));
-    });
-  }
-  gsap.to(".rates__bg img", { yPercent: 15, ease: "none", scrollTrigger: { trigger: ".rates", start: "top bottom", end: "bottom top", scrub: true } });
 
   // rider
   gsap.from(".rider__title span", { yPercent: 100, autoAlpha: 0, stagger: 0.12, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".rider", start: "top 70%" } });
