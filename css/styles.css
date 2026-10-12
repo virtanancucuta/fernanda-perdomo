@@ -2,6 +2,13 @@
    DJ Fernanda Perdomo — landing
    Paleta y tipografía tomadas del press kit (PDF)
    ========================================================== */
+/* Fuentes servidas desde el propio dominio (subconjunto latin: cubre el español) */
+@font-face { font-family: "Anton"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/anton-latin.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/barlow-condensed-400-latin.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 500; font-display: swap; src: url("../assets/fonts/barlow-condensed-500-latin.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 600; font-display: swap; src: url("../assets/fonts/barlow-condensed-600-latin.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 700; font-display: swap; src: url("../assets/fonts/barlow-condensed-700-latin.woff2") format("woff2"); }
+
 :root {
   --lime: #E6FD01;
   --lime-d: #C9DE00;
@@ -64,16 +71,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   }
   .cursor.is-hover span { transform: scale(3.4); }
 }
-
-/* ---------- loader ---------- */
-.loader {
-  position: fixed; inset: 0; z-index: 200; background: var(--lime); color: var(--ink);
-  display: none; flex-direction: column; justify-content: space-between; padding: var(--gutter);
-}
-.js .loader { display: flex; }
-.loader__count { font-family: var(--display); font-size: clamp(120px, 34vw, 420px); line-height: .8; margin-top: auto; }
-.loader__name { font-family: var(--display); font-size: clamp(22px, 3vw, 40px); text-transform: lowercase; margin-top: 12px; }
-.is-loaded .loader { pointer-events: none; }
 
 /* ---------- botones ---------- */
 .btn {
@@ -635,4 +632,15 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (max-width: 860px) {
   .live { grid-template-columns: minmax(0, 1fr); }
   .phone { width: min(78vw, 340px); }
+}
+
+/* Entrada del hero: estado inicial en CSS (sin parpadeo). Si main.js no arranca en 1,2 s,
+   el script del <head> agrega .intro-off y el hero se muestra quieto. */
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.intro-off) .hero__name .word { transform: translateY(110%); }
+  .js:not(.intro-off) .hero__kicker span,
+  .js:not(.intro-off) .hero__stage,
+  .js:not(.intro-off) .hero__bottom,
+  .js:not(.intro-off) .hero__scroll,
+  .js:not(.intro-off) .hero__deco > * { opacity: 0; }
 }

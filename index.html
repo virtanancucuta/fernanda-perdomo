@@ -19,12 +19,11 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Impact,sans-serif' font-size='40' fill='%23E6FD01'%3EP%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/anton-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/barlow-condensed-700-latin.woff2" crossorigin>
   <link rel="preload" as="image" href="assets/img/spin/0.webp">
-  <link rel="stylesheet" href="css/styles.css?v=20261012b">
-  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="css/styles.css?v=20261012c">
+  <script>(function(d){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('intro-on'))d.classList.add('intro-off');},1200);})(document.documentElement);</script>
 
   <script type="application/ld+json">
   {
@@ -42,12 +41,6 @@
   </script>
 </head>
 <body>
-  <!-- PRELOADER -->
-  <div class="loader" aria-hidden="true">
-    <div class="loader__count"><span data-count>00</span></div>
-    <div class="loader__name">fernanda perdomo</div>
-  </div>
-
   <div class="grain" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span></span></div>
 
@@ -91,12 +84,12 @@
         <div class="hero__disc">
           <div class="spin" data-spin>
             <img src="assets/img/spin/0.webp" alt="" class="is-on" width="734" height="1100">
-            <img src="assets/img/spin/1.webp" alt="" width="734" height="1100" loading="lazy">
-            <img src="assets/img/spin/2.webp" alt="" width="734" height="1100" loading="lazy">
-            <img src="assets/img/spin/3.webp" alt="" width="734" height="1100" loading="lazy">
-            <img src="assets/img/spin/4.webp" alt="" width="734" height="1100" loading="lazy">
-            <img src="assets/img/spin/5.webp" alt="" width="734" height="1100" loading="lazy">
-            <img src="assets/img/spin/6.webp" alt="" width="734" height="1100" loading="lazy">
+            <img data-src="assets/img/spin/1.webp" alt="" width="734" height="1100">
+            <img data-src="assets/img/spin/2.webp" alt="" width="734" height="1100">
+            <img data-src="assets/img/spin/3.webp" alt="" width="734" height="1100">
+            <img data-src="assets/img/spin/4.webp" alt="" width="734" height="1100">
+            <img data-src="assets/img/spin/5.webp" alt="" width="734" height="1100">
+            <img data-src="assets/img/spin/6.webp" alt="" width="734" height="1100">
           </div>
         </div>
       </div>
@@ -140,7 +133,7 @@
       <div class="live__media">
         <i class="x x--live" aria-hidden="true"></i><i class="tri tri--live" aria-hidden="true"></i>
         <div class="phone">
-          <video data-reel muted loop playsinline preload="none" poster="assets/video/en-vivo-poster.webp" width="720" height="1280" aria-label="Video de Fernanda Perdomo tocando en vivo en un rooftop">
+          <video data-reel muted loop playsinline preload="none" data-poster="assets/video/en-vivo-poster.webp" width="720" height="1280" aria-label="Video de Fernanda Perdomo tocando en vivo en un rooftop">
             <source src="assets/video/en-vivo.mp4" type="video/mp4">
           </video>
           <span class="phone__rec" aria-hidden="true"><i></i>LIVE</span>
@@ -216,77 +209,66 @@
         <header class="session__head">
           <span class="sec-num">03</span>
           <h2 class="session__title">acompáñame<br>a mi última<br><em>sesión de fotos</em></h2>
-          <p class="sec-sub">Cinco looks, un estudio y mucha música. Toca cualquier foto para verla en grande.</p>
+          <p class="sec-sub">Cuatro looks, un estudio y mucha música. Toca cualquier foto para verla en grande.</p>
           <p class="session__hint" aria-hidden="true">desliza <i>→</i></p>
         </header>
 
         <div class="session__track" data-hscroll>
-          <article class="look" data-look="jean">
+          <article class="look" data-look="editorial">
+            <div class="look__label"><span>portada</span><strong>editorial</strong></div>
+            <div class="look__grid">
+              <a class="ph ph--tall" href="assets/img/sesion/editorial/fer01.webp"><img src="assets/img/sesion/editorial/fer01-t.webp" alt="Retrato editorial entre humo, chaqueta denim y audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/editorial/fer02.webp"><img src="assets/img/sesion/editorial/fer02-t.webp" alt="Retrato editorial entre humo, chaqueta denim y gafas" width="600" height="900" loading="lazy"></a>
+            </div>
+          </article>
+
+          <article class="look" data-look="denim">
             <div class="look__label"><span>look 01</span><strong>denim</strong></div>
             <div class="look__grid">
-              <a class="ph ph--tall" href="assets/img/looks/jean/0112.webp"><img src="assets/img/looks/jean/0112-t.webp" alt="Look denim, retrato con audífonos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/jean/0078.webp"><img src="assets/img/looks/jean/0078-t.webp" alt="Look denim, sentada con botas" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/jean/0105.webp"><img src="assets/img/looks/jean/0105-t.webp" alt="Look denim con audífonos al cuello" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/jean/0083.webp"><img src="assets/img/looks/jean/0083-t.webp" alt="Look denim, chaqueta con flores" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/jean/0118.webp"><img src="assets/img/looks/jean/0118-t.webp" alt="Look denim, retrato" width="480" height="720" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/denim/0111.webp"><img src="assets/img/sesion/denim/0111-t.webp" alt="Look denim, chaqueta de flores y audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/denim/0062.webp"><img src="assets/img/sesion/denim/0062-t.webp" alt="Look denim, chaqueta abierta y minifalda" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/denim/0093.webp"><img src="assets/img/sesion/denim/0093-t.webp" alt="Look denim, chaqueta caída al hombro" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/denim/0132.webp"><img src="assets/img/sesion/denim/0132-t.webp" alt="Look denim, acostada con audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/denim/0090.webp"><img src="assets/img/sesion/denim/0090-t.webp" alt="Look denim, de perfil con gafas" width="600" height="900" loading="lazy"></a>
+            </div>
+          </article>
+
+          <article class="look" data-look="street">
+            <div class="look__label"><span>look 02</span><strong>street</strong></div>
+            <div class="look__grid">
+              <a class="ph ph--tall" href="assets/img/sesion/street/0037.webp"><img src="assets/img/sesion/street/0037-t.webp" alt="Look street, retrato con audífonos y gafas" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/street/0021.webp"><img src="assets/img/sesion/street/0021-t.webp" alt="Look street, agachada con botas blancas" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/street/0029.webp"><img src="assets/img/sesion/street/0029-t.webp" alt="Look street, mirando a cámara con audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/street/0046.webp"><img src="assets/img/sesion/street/0046-t.webp" alt="Look street, sonriendo con audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/street/0003.webp"><img src="assets/img/sesion/street/0003-t.webp" alt="Look street, brazos arriba con pañuelo en la cabeza" width="600" height="900" loading="lazy"></a>
             </div>
           </article>
 
           <article class="look" data-look="flecos">
-            <div class="look__label"><span>look 02</span><strong>flecos</strong></div>
+            <div class="look__label"><span>look 03</span><strong>flecos</strong></div>
             <div class="look__grid">
-              <a class="ph ph--tall" href="assets/img/looks/flecos/9876.webp"><img src="assets/img/looks/flecos/9876-t.webp" alt="Look flecos, girando" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/flecos/9855.webp"><img src="assets/img/looks/flecos/9855-t.webp" alt="Look flecos, audífonos en alto" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/flecos/9913.webp"><img src="assets/img/looks/flecos/9913-t.webp" alt="Look flecos, bailando con audífonos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/flecos/9862.webp"><img src="assets/img/looks/flecos/9862-t.webp" alt="Look flecos, ajustando audífonos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/flecos/9884.webp"><img src="assets/img/looks/flecos/9884-t.webp" alt="Look flecos, mano arriba" width="480" height="720" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/flecos/9886.webp"><img src="assets/img/sesion/flecos/9886-t.webp" alt="Look flecos, mano arriba con audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/flecos/9874.webp"><img src="assets/img/sesion/flecos/9874-t.webp" alt="Look flecos, girando" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/flecos/9875.webp"><img src="assets/img/sesion/flecos/9875-t.webp" alt="Look flecos, bailando con audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/flecos/9880.webp"><img src="assets/img/sesion/flecos/9880-t.webp" alt="Look flecos, ajustando audífonos" width="600" height="900" loading="lazy"></a>
+              <a class="ph" href="assets/img/sesion/flecos/9917.webp"><img src="assets/img/sesion/flecos/9917-t.webp" alt="Look flecos, manos en la cabeza" width="600" height="900" loading="lazy"></a>
             </div>
           </article>
 
           <article class="look look--bts" data-look="backstage">
             <div class="look__label"><span>detrás de cámaras</span><strong>backstage</strong></div>
             <div class="look__grid">
-              <a class="ph ph--wide" href="assets/img/looks/backstage/0049.webp"><img src="assets/img/looks/backstage/0049-t.webp" alt="Maquillaje entre tomas" width="720" height="480" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/backstage/0050.webp"><img src="assets/img/looks/backstage/0050-t.webp" alt="Revisando las fotos con la maquilladora" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/backstage/9863.webp"><img src="assets/img/looks/backstage/9863-t.webp" alt="Retoque de maquillaje" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/backstage/9888.webp"><img src="assets/img/looks/backstage/9888-t.webp" alt="Preparando la toma" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/backstage/9919.webp"><img src="assets/img/looks/backstage/9919-t.webp" alt="Ajuste de vestuario" width="480" height="720" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/backstage/9888.webp"><img src="assets/img/sesion/backstage/9888-t.webp" alt="Backstage: la maquilladora retoca a Fernanda entre tomas" width="600" height="900" loading="lazy"></a>
             </div>
           </article>
 
           <article class="look" data-look="boho">
-            <div class="look__label"><span>look 03</span><strong>white boho</strong></div>
+            <div class="look__label"><span>look 04</span><strong>white boho</strong></div>
             <div class="look__grid">
-              <a class="ph ph--tall" href="assets/img/looks/boho/9950.webp"><img src="assets/img/looks/boho/9950-t.webp" alt="Look blanco con tocado" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/boho/9920.webp"><img src="assets/img/looks/boho/9920-t.webp" alt="Look blanco, bailando" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/boho/9934.webp"><img src="assets/img/looks/boho/9934-t.webp" alt="Look blanco, brazos abiertos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/boho/9941.webp"><img src="assets/img/looks/boho/9941-t.webp" alt="Look blanco, perfil" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/boho/9957.webp"><img src="assets/img/looks/boho/9957-t.webp" alt="Look blanco, retrato" width="480" height="720" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/boho/9941.webp"><img src="assets/img/sesion/boho/9941-t.webp" alt="Look white boho con tocado de cristales" width="600" height="900" loading="lazy"></a>
+              <a class="ph ph--tall" href="assets/img/sesion/boho/9947.webp"><img src="assets/img/sesion/boho/9947-t.webp" alt="Look white boho en movimiento" width="600" height="900" loading="lazy"></a>
             </div>
           </article>
-
-          <article class="look" data-look="turbante">
-            <div class="look__label"><span>look 04</span><strong>turbante</strong></div>
-            <div class="look__grid">
-              <a class="ph ph--tall" href="assets/img/looks/turbante/9973.webp"><img src="assets/img/looks/turbante/9973-t.webp" alt="Look turbante, retrato" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/turbante/9990.webp"><img src="assets/img/looks/turbante/9990-t.webp" alt="Look turbante con audífonos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/turbante/9960.webp"><img src="assets/img/looks/turbante/9960-t.webp" alt="Look turbante, bailando" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/turbante/9976.webp"><img src="assets/img/looks/turbante/9976-t.webp" alt="Look turbante, brazo arriba" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/turbante/9997.webp"><img src="assets/img/looks/turbante/9997-t.webp" alt="Look turbante, audífonos en la cabeza" width="480" height="720" loading="lazy"></a>
-            </div>
-          </article>
-
-          <article class="look" data-look="street">
-            <div class="look__label"><span>look 05</span><strong>street</strong></div>
-            <div class="look__grid">
-              <a class="ph ph--tall" href="assets/img/looks/street/0032.webp"><img src="assets/img/looks/street/0032-t.webp" alt="Look street con audífonos" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/street/0008.webp"><img src="assets/img/looks/street/0008-t.webp" alt="Look street, agachada" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/street/0017.webp"><img src="assets/img/looks/street/0017-t.webp" alt="Look street, con audífonos en la mano" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/street/0044.webp"><img src="assets/img/looks/street/0044-t.webp" alt="Look street, retrato" width="480" height="720" loading="lazy"></a>
-              <a class="ph" href="assets/img/looks/street/0002.webp"><img src="assets/img/looks/street/0002-t.webp" alt="Look street, de pie" width="480" height="720" loading="lazy"></a>
-            </div>
-          </article>
-
           <article class="look look--end">
             <p>¿La quieres<br>en tu evento?</p>
             <a class="btn btn--lime magnetic" href="#reservar">Reservar fecha</a>
@@ -323,7 +305,7 @@
       <div class="reels">
         <article class="reel">
           <div class="reel__media">
-            <video data-reel muted loop playsinline preload="none" poster="assets/video/activacion-studio-f-poster.webp" width="464" height="832" aria-label="Fernanda Perdomo tocando en la activación de Studio F dentro de la tienda">
+            <video data-reel muted loop playsinline preload="none" data-poster="assets/video/activacion-studio-f-poster.webp" width="464" height="832" aria-label="Fernanda Perdomo tocando en la activación de Studio F dentro de la tienda">
               <source src="assets/video/activacion-studio-f.mp4" type="video/mp4">
             </video>
             <span class="reel__tag">Studio F · en tienda</span>
@@ -338,8 +320,8 @@
 
         <article class="reel reel--tour">
           <div class="reel__media">
-            <video data-reel muted loop playsinline preload="none" poster="assets/video/eventos-colombia-poster.webp" width="576" height="1024" aria-label="Fernanda Perdomo en un set de día en una pool party">
-              <source src="assets/video/eventos-colombia.mp4" type="video/mp4">
+            <video data-reel muted loop playsinline preload="none" data-poster="assets/video/eventos-colombia-25s-poster.webp" width="576" height="1024" aria-label="Fernanda Perdomo en un set de día en una pool party">
+              <source src="assets/video/eventos-colombia-25s.mp4" type="video/mp4">
             </video>
             <span class="reel__tag">Pool party · set de día</span>
             <button class="phone__sound" data-reel-sound aria-pressed="false"><svg class="ico"><use href="#i-play"/></svg><span>Activar sonido</span></button>
@@ -452,10 +434,10 @@
     <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
   </svg>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="js/config.js?v=20261012b" defer></script>
-  <script src="js/main.js?v=20261012b" defer></script>
+  <script src="js/vendor/gsap-3.12.5.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger-3.12.5.min.js" defer></script>
+  <script src="js/vendor/lenis-1.1.13.min.js" defer></script>
+  <script src="js/config.js?v=20261012c" defer></script>
+  <script src="js/main.js?v=20261012c" defer></script>
 </body>
 </html>

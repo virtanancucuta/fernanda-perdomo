@@ -147,7 +147,11 @@
     // ping-pong 0→6→0 para simular el giro del vestido
     const order = frames.map((_, i) => i).concat(frames.map((_, i) => frames.length - 2 - i).slice(0, -1));
     let k = 0;
-    const ready = Promise.all(frames.map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve())));
+    const afterLoad = new Promise((r) => (document.readyState === "complete" ? r() : window.addEventListener("load", r, { once: true })));
+    const ready = afterLoad.then(() => {
+      frames.forEach((img) => { if (img.dataset.src) { img.src = img.dataset.src; img.removeAttribute("data-src"); } });
+      return Promise.all(frames.map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve())));
+    });
     ready.then(() => {
       setInterval(() => {
         if (document.hidden) return;
@@ -305,9 +309,31 @@
     r.btn.setAttribute("aria-pressed", String(on));
     r.btn.querySelector("span").textContent = on ? "Silenciar" : "Activar sonido";
   };
+  // portada + descarga cuando falta ~una pantalla para llegar: así arranca apenas se ve
+  const warm = (v) => {
+    if (v.dataset.poster) { v.poster = v.dataset.poster; v.removeAttribute("data-poster"); }
+    if (v.preload === "none") v.preload = "auto";
+  };
   const muteOthers = (keep) => reels.forEach((r) => { if (r !== keep && !r.vid.muted) setSound(r, false); });
-  const tryPlay = (v) => { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); };
-  reels.forEach((r) => {
+  // si el navegador bloquea el autoplay (p. ej. iPhone en ahorro de batería) el botón invita a reproducir
+  const tryPlay = (v) => {
+    const pr = v.play();
+    if (pr && pr.catch) pr.catch(() => {
+      const r = reels.find((x) => x.vid === v);
+      if (r && r.btn && v.paused) r.btn.querySelector("span").textContent = "Reproducir";
+    });
+  };
+  // precarga en orden: un video se adelanta solo cuando el anterior ya puede reproducirse,
+  // para no repartir el ancho de banda entre dos o tres videos a la vez
+  const pending = new Set();
+  const warmInOrder = (i) => {
+    const r = reels[i], prev = reels[i - 1];
+    if (r.warm) return;
+    if (prev && !(prev.warm && prev.vid.readyState >= 3)) { pending.add(i); return; }
+    pending.delete(i); r.warm = true; warm(r.vid);
+  };
+  reels.forEach((r, i) => {
+    r.vid.addEventListener("canplay", () => { if (pending.has(i + 1)) warmInOrder(i + 1); });
     if (r.btn) {
       r.btn.addEventListener("click", () => {
         const on = r.vid.muted;
@@ -320,10 +346,17 @@
       });
     }
     if ("IntersectionObserver" in window) {
+      // la precarga anticipada espera al load para no competir con el primer pantallazo
+      const near = () => new IntersectionObserver(([e], io) => {
+        if (e.isIntersecting) { warmInOrder(i); io.disconnect(); }
+      }, { rootMargin: "100% 0px" }).observe(r.vid);
+      if (document.readyState === "complete") near(); else window.addEventListener("load", near, { once: true });
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) { if (r.vid.preload === "none") r.vid.preload = "auto"; if (!reduced) tryPlay(r.vid); }
+        if (e.isIntersecting) { r.warm = true; pending.delete(i); warm(r.vid); if (!reduced) tryPlay(r.vid); }
         else if (!r.vid.paused) r.vid.pause();
       }, { threshold: 0.35 }).observe(r.vid);
+    } else {
+      warm(r.vid);
     }
   });
   if (mainAudio) mainAudio.addEventListener("play", () => muteOthers(null));
@@ -375,35 +408,9 @@
     touchX = null;
   });
 
-  /* ---------------- Loader ---------------- */
-  const loader = $(".loader");
-  const countEl = $("[data-count]");
-  const startLoader = () => new Promise((resolve) => {
-    if (!loader) return resolve();
-    if (reduced) { loader.remove(); return resolve(); }
-    const t0 = performance.now();
-    const DUR = 1300;
-    const tick = (now) => {
-      const r = Math.min(1, (now - t0) / DUR);
-      const eased = 1 - Math.pow(1 - r, 3);
-      countEl.textContent = String(Math.round(eased * 100)).padStart(2, "0");
-      if (r < 1) return requestAnimationFrame(tick);
-      root.classList.add("is-loaded");
-      const anim = loader.animate(
-        [{ clipPath: "inset(0 0 0 0)" }, { clipPath: "inset(0 0 100% 0)" }],
-        { duration: 900, easing: "cubic-bezier(.76,0,.24,1)", fill: "forwards" }
-      );
-      setTimeout(resolve, 380);
-      anim.onfinish = () => loader.remove();
-      setTimeout(() => loader.isConnected && loader.remove(), 1600);
-    };
-    requestAnimationFrame(tick);
-  });
-
   /* ---------------- Animaciones GSAP ---------------- */
   if (!hasGSAP || reduced) {
-    root.classList.add("no-anim");
-    startLoader();
+    root.classList.add("no-anim", "intro-off");
     return;
   }
 
@@ -427,22 +434,23 @@
     return $$(".w", el);
   };
 
-  // estado inicial del hero (antes de que termine el loader)
+  // entrada del hero (el estado inicial ya lo puso el CSS; si pasó 1,2 s sin JS, se omite)
+  const playIntro = !root.classList.contains("intro-off");
+  if (playIntro) root.classList.add("intro-on");
   const heroWords = $$(".hero__name .word");
-  gsap.set(heroWords, { yPercent: 110 });
-  gsap.set(".hero__kicker span", { autoAlpha: 0, x: -30 });
-  gsap.set(".hero__stage", { autoAlpha: 0, scale: 0.8, rotate: -25 });
-  gsap.set([".hero__bottom", ".hero__scroll"], { autoAlpha: 0, y: 30 });
-  gsap.set(".hero__deco > *", { autoAlpha: 0, scale: 0 });
-
-  startLoader().then(() => {
+  if (playIntro) {
+    gsap.set(heroWords, { y: 0, yPercent: 110 }); // y: 0 descarta el translateY(110%) del CSS inicial
+    gsap.set(".hero__kicker span", { autoAlpha: 0, x: -30 });
+    gsap.set(".hero__stage", { autoAlpha: 0, scale: 0.8, rotate: -25 });
+    gsap.set([".hero__bottom", ".hero__scroll"], { autoAlpha: 0, y: 30 });
+    gsap.set(".hero__deco > *", { autoAlpha: 0, scale: 0 });
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
     tl.to(".hero__stage", { autoAlpha: 1, scale: 1, rotate: 0, duration: 1.6 }, 0)
       .to(heroWords, { yPercent: 0, duration: 1.3, stagger: 0.12 }, 0.1)
       .to(".hero__kicker span", { autoAlpha: 1, x: 0, duration: 1, stagger: 0.1 }, 0.4)
       .to(".hero__deco > *", { autoAlpha: 1, scale: 1, duration: 0.8, stagger: 0.08, ease: "back.out(3)" }, 0.7)
       .to([".hero__bottom", ".hero__scroll"], { autoAlpha: 1, y: 0, duration: 1 }, 0.8);
-  });
+  }
 
   // decoraciones flotando
   $$(".hero__deco > *").forEach((el, i) => {
